@@ -37,7 +37,7 @@ schema =
         attribute defaultPhase { xsd:IDREF }?,
         attribute queryBinding { non-empty-string }?,
         (foreign
-         & inclusion*
+         & inclusion* & extends.href*
          & (title?, ns*, p*, let*, phase*, pattern+, p*, diagnostics?, properties?))
     }
 active =
@@ -63,7 +63,7 @@ diagnostic =
         rich,
         (foreign & (text | value-of | emph | dir | span)*)
     }
-diagnostics = element diagnostics { foreign & inclusion* & diagnostic* }
+diagnostics = element diagnostics { foreign & inclusion* & extends.href* & diagnostic* }
 dir =
     element dir {
         attribute value { "ltr" | "rtl" }?,
@@ -72,8 +72,12 @@ dir =
 emph = element emph { text }
 extends =
     element extends {
-        (attribute rule { xsd:IDREF }
-         | attribute href { uriValue }),
+        attribute rule { xsd:IDREF },
+        foreign-empty
+    }
+extends.href =
+    element extends {
+        attribute href { uriValue },
         foreign-empty
     }
 let =
@@ -111,7 +115,7 @@ pattern =
         attribute documents { pathValue }?,
         rich,
         (foreign
-         & inclusion*
+         & inclusion* & extends.href*
          & ((attribute abstract { "true" },
              attribute id { xsd:ID },
              title?,
@@ -130,9 +134,9 @@ phase =
     element phase {
         attribute id { xsd:ID },
         rich,
-        (foreign & inclusion* & (p*, let*, active*))
+        (foreign & inclusion* & extends.href* & (p*, let*, active*))
     }
-properties = element properties { property* }
+properties = element properties { extends.href* & property* }
 property =
     element property {
         attribute id { xsd:ID },
@@ -161,12 +165,12 @@ rule =
          & ((attribute abstract { "true" },
              attribute id { xsd:ID },
              let*,
-             (assert | report | extends | p)+)
+             (assert | report | extends | extends.href | p)+)
             | (attribute context { pathValue },
                attribute id { xsd:ID }?,
                attribute abstract { "false" }?,
                let*,
-               (assert | report | extends | p)+)))
+               (assert | report | extends | extends.href | p)+)))
     }
 span =
     element span {
