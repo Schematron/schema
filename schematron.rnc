@@ -24,7 +24,7 @@
 # AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD". 
 
 namespace local = ""
-default namespace sch = "http://purl.oclc.org/dsdl/schematronhttp://purl.oclc.org/dsdl/schematron"
+default namespace sch = "http://purl.oclc.org/dsdl/schematron"
 
 start = schema
 
