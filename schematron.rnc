@@ -80,6 +80,7 @@ extends =
 let =
     element let {
         attribute name { nameValue },
+        attribute as { text }?,
         (attribute value { string }
          | foreign-element+)
     }
