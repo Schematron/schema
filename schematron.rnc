@@ -1,4 +1,4 @@
-# Copyright © ISO/IEC 2017
+# Copyright © ISO/IEC 2024
 # The following permission notice and disclaimer shall be included in all 
 # copies of this XML schema ("the Schema"), and derivations of the Schema: 
 
@@ -26,7 +26,7 @@
 namespace local = ""
 default namespace sch = "http://purl.oclc.org/dsdl/schematron"
 
-start = schema
+start = schema | library
 
 # Element declarations 
 schema =
@@ -37,8 +37,8 @@ schema =
         attribute defaultPhase { xsd:IDREF }?,
         attribute queryBinding { non-empty-string }?,
         (foreign
-         & inclusion*
-         & (title?, ns*, p*, let*, phase*, pattern+, p*, diagnostics?, properties?))
+         & (inclusion | extends)*
+         & (title?, ns*, p*, let*, phase*, abstract-rules*, (rule-set|pattern)+, p*, diagnostics?, properties?))
     }
 active =
     element active {
@@ -54,6 +54,7 @@ assert =
         attribute properties { xsd:IDREFS }?,
         rich,
         linkable,
+        severity,
         (foreign & (text | name | value-of | emph | dir | span)*)
     }
 diagnostic =
@@ -82,6 +83,14 @@ let =
         (attribute value { string }
          | foreign-element+)
     }
+library =
+    element library {
+        attribute id { xsd:ID }?,
+        rich,
+        (foreign
+         & (inclusion | extends)*
+         & (title?, p*, abstract-rules*, (rule-set|pattern)+, p*, diagnostics?, properties?))
+    }
 name =
     element name {
         attribute path { pathValue }?,
@@ -108,23 +117,7 @@ param =
 
 pattern =
     element pattern {
-        attribute documents { pathValue }?,
-        rich,
-        (foreign
-         & inclusion*
-         & ((attribute abstract { "true" },
-             attribute id { xsd:ID },
-             title?,
-             (p*, let*, rule*))
-            | (attribute abstract { "false" }?,
-               attribute id { xsd:ID }?,
-               title?,
-               (p*, let*, rule*))
-            | (attribute abstract { "false" }?,
-               attribute is-a { xsd:IDREF },
-               attribute id { xsd:ID }?,
-               title?,
-               (p*, param*))))
+        rule-set-or-pattern
     }
 phase =
     element phase {
@@ -149,6 +142,7 @@ report =
         attribute properties { xsd:IDREFS }?,
         rich,
         linkable,
+        severity,
         (foreign & (text | name | value-of | emph | dir | span)*)
     }
 rule =
@@ -158,15 +152,35 @@ rule =
         linkable,
         (foreign
          & inclusion*
-         & ((attribute abstract { "true" },
-             attribute id { xsd:ID },
-             let*,
-             (assert | report | extends | p)+)
-            | (attribute context { pathValue },
+         & ((attribute context { pathValue },
                attribute id { xsd:ID }?,
                attribute abstract { "false" }?,
                let*,
                (assert | report | extends | p)+)))
+    }
+abstract-rule =
+    element rule {
+        attribute flag { flagValue }?,
+        rich,
+        linkable,
+        (foreign
+        & inclusion*
+        & (attribute abstract { "true" },
+            attribute id { xsd:ID },
+            let*,
+            (assert | report | extends | p)+))
+    }    
+abstract-rules =
+    element rules {
+        attribute id { xsd:ID }?,
+        rich,
+        title?,
+        p*,
+        abstract-rule+
+    }
+rule-set = 
+    element group {
+        rule-set-or-pattern    
     }
 span =
     element span {
@@ -205,6 +219,25 @@ foreign-element =
          | schema
          | text)*
     }
+rule-set-or-pattern =
+    attribute documents { pathValue }?,
+    rich,
+    (foreign
+     & inclusion*
+     & ((attribute abstract { "true" },
+         attribute id { xsd:ID },
+         title?,
+         (p*, let*, rule*))
+        | (attribute abstract { "false" }?,
+           attribute id { xsd:ID }?,
+           title?,
+           (p*, let*, rule*))
+        | (attribute abstract { "false" }?,
+           attribute is-a { xsd:IDREF },
+           attribute id { xsd:ID }?,
+           title?,
+           (p*, param*))))
+severity = attribute severity{ text }?           
 
 # Data types 
 uriValue = xsd:anyURI
