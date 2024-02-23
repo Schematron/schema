@@ -68,9 +68,9 @@ diagnostics = element diagnostics { foreign & inclusion* & diagnostic* }
 dir =
     element dir {
         attribute value { "ltr" | "rtl" }?,
-        (foreign & text)
+        (foreign & (text | dynamic)*)
     }
-emph = element emph { text }
+emph = element emph { (foreign & (text | dynamic)*) }
 extends =
     element extends {
         (attribute rule { xsd:IDREF }
@@ -186,7 +186,7 @@ rule-set =
 span =
     element span {
         attribute class { classValue },
-        (foreign & text)
+        (foreign & (text | dynamic)*)
     }
 title = element title { (text | dir)* }
 value-of =
@@ -239,6 +239,7 @@ rule-set-or-pattern =
            title?,
            (p*, param*))))
 severity = attribute severity{ text }?           
+dynamic = value-of | name
 
 # Data types 
 uriValue = xsd:anyURI
