@@ -55,14 +55,14 @@ assert =
         rich,
         linkable,
         severity,
-        (foreign & (text | name | value-of | emph | dir | span)*)
+        message
     }
 diagnostic =
     element diagnostic {
         attribute id { xsd:ID },
         attribute role { roleValue }?,
         rich,
-        (foreign & (text | value-of | emph | dir | span)*)
+        message
     }
 diagnostics = element diagnostics { foreign & inclusion* & diagnostic* }
 dir =
@@ -132,7 +132,7 @@ property =
         attribute id { xsd:ID },
         attribute role { roleValue }?,
         attribute scheme { text }?,
-        (foreign & (text | name | value-of | emph | dir | span)*)
+        message
     }
 report =
     element report {
@@ -144,7 +144,7 @@ report =
         rich,
         linkable,
         severity,
-        (foreign & (text | name | value-of | emph | dir | span)*)
+        message
     }
 rule =
     element rule {
@@ -240,6 +240,7 @@ rule-set-or-pattern =
            (p*, param*))))
 severity = attribute severity{ text }?           
 dynamic = value-of | name
+message = (foreign & (text | dynamic | emph | dir | span)*)
 
 # Data types 
 uriValue = xsd:anyURI
