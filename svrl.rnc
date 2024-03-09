@@ -68,6 +68,7 @@ fired-rule =
 diagnostic-reference =
     element diagnostic-reference {
         attribute diagnostic { xsd:NMTOKEN },
+        attribute role { text }?,
         human-text
     }
 # only failed assertions are reported 

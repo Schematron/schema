@@ -156,6 +156,7 @@ rule =
          & ((attribute context { pathValue },
                attribute id { xsd:ID }?,
                attribute abstract { "false" }?,
+               title?,
                let*,
                (assert | report | extends | p)+)))
     }
@@ -168,6 +169,7 @@ abstract-rule =
         & inclusion*
         & (attribute abstract { "true" },
             attribute id { xsd:ID },
+            title?,
             let*,
             (assert | report | extends | p)+))
     }    
@@ -222,6 +224,7 @@ foreign-element =
     }
 rule-set-or-pattern =
     attribute documents { pathValue }?,
+    attribute role { roleValue }?,
     rich,
     (foreign
      & inclusion*
