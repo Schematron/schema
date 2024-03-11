@@ -253,7 +253,7 @@ exprValue = string
 fpiValue = string
 langValue = xsd:language
 roleValue = string
-flagValue = string
+flagValue = list{ token+ }
 nameValue = string
 
 # In the default query language binding, xsd:NCNAME 

@@ -61,7 +61,7 @@ fired-rule =
         attribute name { text }?,
         attribute context { text },
         attribute role { string }?,
-        attribute flag { string }?,
+        attribute flag { list{ token+ } }?,
         attribute document { xsd:anyURI }?,
         empty
     }
@@ -143,7 +143,7 @@ attlist.assert-and-report =
     attribute location { text },
     attribute test { text },
     attribute role { string }?,
-    attribute flag { string }?,
+    attribute flag { list{ token+ } }?,
     attribute severity { string }?
 
 # active patterns and rule-sets
