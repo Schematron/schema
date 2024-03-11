@@ -34,6 +34,7 @@ schema =
         attribute id { xsd:ID }?,
         rich,
         attribute schemaVersion { non-empty-string }?,
+        attribute schematronVersion { non-empty-string }?,
         attribute defaultPhase { xsd:IDREF }?,
         attribute queryBinding { non-empty-string }?,
         (foreign
