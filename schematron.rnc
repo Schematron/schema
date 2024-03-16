@@ -39,7 +39,7 @@ schema =
         attribute queryBinding { non-empty-string }?,
         (foreign
          & (inclusion | extends)*
-         & (title?, ns*, p*, let*, phase*, abstract-rules*, (rule-set|pattern)+, p*, diagnostics?, properties?))
+         & (title?, ns*, p*, param*, let*, phase*, abstract-rules*, (rule-set|pattern)+, p*, diagnostics?, properties?))
     }
 active =
     element active {
@@ -114,7 +114,7 @@ p =
 param =
     element param {
         attribute name { nameValue },
-        attribute value { non-empty-string }
+        attribute value { non-empty-string }?
     }
 
 pattern =
@@ -232,7 +232,7 @@ rule-set-or-pattern =
      & ((attribute abstract { "true" },
          attribute id { xsd:ID },
          title?,
-         (p*, let*, rule*))
+         (p*, param*, let*, rule*))
         | (attribute abstract { "false" }?,
            attribute id { xsd:ID }?,
            title?,
