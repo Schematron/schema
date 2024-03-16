@@ -7,14 +7,39 @@
 -->
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:sch='http://purl.oclc.org/dsdl/schematron' schematron="schematron.sch">
     <x:scenario label="demo-01">
-        <x:context><schema xmlns="http://purl.oclc.org/dsdl/schematron"><phase id='faulty'><active pattern="p1"
-            /></phase>
-            <phase id='fault-free'><active pattern="p2"
-            /></phase>
+        <x:context><schema xmlns="http://purl.oclc.org/dsdl/schematron">
+            <param name="myParam"/>
+            <param name="myParam"/>
+            <phase id='faulty'>
+                <active pattern="p1"/>
+            </phase>
+            <phase id='fault-free'>
+                <active pattern="p2"/>
+            </phase>
             <pattern id="p2"/>
             <pattern id='p3' is-a='foo'/>
-            <pattern id='p4' is-a='bar'/>
-            <pattern id='bar' abstract='true'/></schema></x:context>
+            <pattern id='p4' is-a='bar'>
+                <param name="blort"/>
+                <param name="not-declared"/>
+            </pattern>
+            <pattern id='bar' abstract='true'>
+                <param name='blort'/>
+            </pattern>
+            <pattern id="p5">
+                <let name='blort'/>
+                <let name='wibble'/>
+                <rule abstract='true' id='r1'/>
+                <extends rule='r1'/>
+                <extends rule='r2'/>
+            </pattern>
+            <pattern id='p6' abstract='true'>
+                <param name="blort"/>
+                <param name="blort"/>
+            </pattern>
+            <pattern id='p7' is-a='bar'>
+                <param name="blort"/>
+            </pattern>
+        </schema></x:context>
 
         <x:scenario label="active pattern references">
             <x:expect-not-assert
@@ -31,6 +56,56 @@
             <x:expect-not-assert label="abstract pattern referenced correctly"
                 id="abstract-patterns"
                 location="/sch:schema[1]/sch:pattern[@id='p4']"/>
+        </x:scenario>
+        
+        <x:scenario label="abstract rule references">
+            <x:expect-assert label="abstract rule missing"
+            id="abstract-rules"
+            location="/sch:schema/sch:pattern[@id='p5']/sch:extends[@rule='r2']"/>
+            <x:expect-not-assert label="abstract rule referenced correctly"
+                id="abstract-rules"
+                location="/sch:schema/sch:pattern[@id='p5']/sch:extends[@rule='r1']"/>
+        </x:scenario>
+        
+        <x:scenario label="parameter variable name clash">
+            <x:expect-assert label="param variable name clash"
+                id="param-variable-clash"
+                location="/sch:schema/sch:pattern[@id='p5']/sch:let[@name='blort']"/>
+            <x:expect-not-assert label="param variable no name clash"
+                id="param-variable-clash"
+                location="/sch:schema/sch:pattern[@id='p5']/sch:let[@name='wibble']"/>
+        </x:scenario>
+        
+        <x:scenario label="schema param dupe name">
+            <x:expect-assert label="duplicate schema param"
+            id="param-name"
+            location="/sch:schema/sch:param[1]"/>
+            <x:expect-assert label="duplicate pattern param"
+                id="param-name"
+                location="/sch:schema/sch:pattern[@id='p6']/sch:param[1]"/>
+            <x:expect-not-assert label="distinct pattern param"
+                id="param-name"
+                location="/sch:schema/sch:pattern[@id='bar']/sch:param[1]"/>
+        </x:scenario>
+        
+        <!-- not-assert version of previous, with no duplicate schema params -->
+        <x:scenario label="schema param dupe name">
+            <x:context><sch:schema>
+                <sch:param name='pram1'/>
+                <sch:param name='pram2'/>
+            </sch:schema></x:context>
+            <x:expect-not-assert label="distinct schema param"
+                id="param-name"
+                location="/sch:schema/sch:param[1]"/>
+        </x:scenario>
+        
+        <x:scenario label="concrete and abstract param names match">
+            <x:expect-assert label="param name not declared for abstract pattern"
+                id="param-names-match"
+                location="/sch:schema/sch:pattern[@id='p4']"/>
+            <x:expect-not-assert label="param name declared for abstract pattern"
+                id="param-names-match"
+                location="/sch:schema/sch:pattern[@id='p7']"/>
         </x:scenario>
     </x:scenario>
 </x:description>
