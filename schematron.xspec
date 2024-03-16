@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+        
+    XSpec tests for Schematron schema schema (Annex B of ISO standard).
+    Tested under XSpec v3.0
+    
+-->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:sch='http://purl.oclc.org/dsdl/schematron' schematron="schematron.sch">
+    <x:scenario label="demo-01">
+        <x:context><schema xmlns="http://purl.oclc.org/dsdl/schematron"><phase id='faulty'><active pattern="p1"
+            /></phase>
+            <phase id='fault-free'><active pattern="p2"
+            /></phase>
+            <pattern id="p2"/>
+            <pattern id='p3' is-a='foo'/>
+            <pattern id='p4' is-a='bar'/>
+            <pattern id='bar' abstract='true'/></schema></x:context>
+
+        <x:scenario label="active pattern references">
+            <x:expect-not-assert
+                label="active pattern referenced correctly" id="active-patterns"
+                location="/sch:schema/sch:phase[@id='fault-free']/sch:active"/>
+            <x:expect-assert label="active pattern missing"
+                id="active-patterns" location="/sch:schema/sch:phase[@id='faulty']/sch:active"/>
+        </x:scenario>
+        
+        <x:scenario label="abstract pattern references">
+            <x:expect-assert label="abstract pattern missing"
+                id="abstract-patterns"
+                location="/sch:schema[1]/sch:pattern[@id='p3']"/>
+            <x:expect-not-assert label="abstract pattern referenced correctly"
+                id="abstract-patterns"
+                location="/sch:schema[1]/sch:pattern[@id='p4']"/>
+        </x:scenario>
+    </x:scenario>
+</x:description>
