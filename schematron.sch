@@ -69,5 +69,8 @@ AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD."
         <sch:rule context="sch:pattern[@is-a]/sch:param">
             <sch:assert test="@value or key('abstract-pattern', ../@is-a)/sch:param/@value" id="missing-param-value">A pattern parameter value shall be specified.</sch:assert>
         </sch:rule>
+        <sch:rule context="sch:schema/sch:param">
+            <sch:assert test="@value" id="schema-param-value">A schema parameter value shall be specified.</sch:assert>
+        </sch:rule>
     </sch:pattern>
 </sch:schema>

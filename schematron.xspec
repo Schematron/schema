@@ -142,5 +142,21 @@
                 id="missing-param-value"
                 location="/sch:schema/sch:pattern[@id='p12']/sch:param"/>
         </x:scenario>
+        
+        <x:scenario label="schema param value must be present">
+            <x:expect-assert label="para value missing"
+                id="schema-param-value"
+                location="/sch:schema/sch:param[1]"/>
+        </x:scenario>
+        
+        <!-- not-assert version of previous scenario, with no missing schema param values -->
+        <x:scenario label="schema param value must be present">
+            <x:context><sch:schema>
+                <sch:param name='pram1' value='asldj'/>
+            </sch:schema></x:context>
+            <x:expect-not-assert label="schema param value present"
+                id="schema-param-value"
+                location="/sch:schema/sch:param[1]"/>
+        </x:scenario>
     </x:scenario>
 </x:description>
