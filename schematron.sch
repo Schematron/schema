@@ -21,7 +21,9 @@ THIS SCHEMA HAS BEEN MODIFIED FROM THE SCHEMA DEFINED IN ISO/IEC 19757 3,
 AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD."
 -->
 
-<sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" xml:lang="en" queryBinding="xslt2">
+<sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" xml:lang="en" queryBinding="xslt2"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:key name='abstract-pattern' match='sch:pattern[@abstract="true"]' use='@id'/>
     <sch:title>Schema for Additional Constraints in Schematron</sch:title>
     <sch:ns prefix="sch" uri="http://purl.oclc.org/dsdl/schematron"/>
     <sch:p>This schema supplies some constraints in addition to those given in the
@@ -32,18 +34,6 @@ AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD."
             <sch:assert test="//sch:pattern[@id=current()/@pattern]" id='active-patterns'> The pattern
                 attribute of the active element shall match the id
                 attribute of a pattern.</sch:assert>
-        </sch:rule>
-        <sch:rule context="sch:pattern[@is-a]">
-            <sch:assert test="//sch:pattern[@abstract='true'][@id=current()/@is-a]" id="abstract-patterns"> The
-                is-a attribute of a pattern element shall match 
-                the id attribute of an abstract pattern.
-            </sch:assert>
-            <sch:assert test="every $name in current()/sch:param/@name
-                satisfies $name eq //sch:pattern[@abstract='true'][@id=current()/@is-a]/sch:param/@name" id="param-names-match"> The
-                name attribute of a pattern param element shall match 
-                the id attribute of an abstract pattern param element.
-            </sch:assert>
-            <sch:assert test="TODO: missing param value"></sch:assert>
         </sch:rule>
         <sch:rule context="sch:extends">
             <sch:assert test="//sch:rule[@abstract='true'][@id=current()/@rule]" id="abstract-rules"> The rule
@@ -62,6 +52,22 @@ AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD."
         <sch:rule context="sch:param">
             <sch:assert test="not(../(sch:param except current())[@name=current()/@name])"
                 id="param-name">A parameter name should not use the same name as a parameter in the same scope.</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+    <sch:pattern>
+        <sch:rule context="sch:pattern[@is-a]">
+            <sch:assert test="key('abstract-pattern', @is-a)" id="abstract-patterns"> The
+                is-a attribute of a pattern element shall match 
+                the id attribute of an abstract pattern.
+            </sch:assert>
+            <sch:assert test="every $name in current()/sch:param/@name
+                satisfies $name eq key('abstract-pattern', @is-a)/sch:param/@name" id="param-names-match"> The
+                name attribute of a pattern param element shall match 
+                the id attribute of an abstract pattern param element.
+            </sch:assert>
+        </sch:rule>
+        <sch:rule context="sch:pattern[@is-a]/sch:param">
+            <sch:assert test="@value or key('abstract-pattern', ../@is-a)/sch:param/@value" id="missing-param-value">A pattern parameter value shall be specified.</sch:assert>
         </sch:rule>
     </sch:pattern>
 </sch:schema>

@@ -39,6 +39,26 @@
             <pattern id='p7' is-a='bar'>
                 <param name="blort"/>
             </pattern>
+            <pattern id='p8' abstract='true'>
+                <!-- abstract pattern param contains default value -->
+                <param name="jam" value='spam'/>
+            </pattern>
+            <pattern id='p9' is-a='p8'>
+                <!-- concrete pattern param missing; use default from abstract -->
+                <param name="jam"/>
+            </pattern>
+            <pattern id='p10' is-a='p8'>
+                <!-- concrete pattern param overrides default value -->
+                <param name="jam" value='clam'/>
+            </pattern>
+            <pattern id="p11" abstract='true'>
+                <!-- abstract pattern param has no default value -->
+                <param name="sham"/>
+            </pattern>
+            <pattern id='p12' is-a='p11'>
+                <!-- concrete pattern param specifies value -->
+                <param name="sham" value='shazam'/>
+            </pattern>
         </schema></x:context>
 
         <x:scenario label="active pattern references">
@@ -88,7 +108,7 @@
                 location="/sch:schema/sch:pattern[@id='bar']/sch:param[1]"/>
         </x:scenario>
         
-        <!-- not-assert version of previous, with no duplicate schema params -->
+        <!-- not-assert version of previous scenario, with no duplicate schema params -->
         <x:scenario label="schema param dupe name">
             <x:context><sch:schema>
                 <sch:param name='pram1'/>
@@ -106,6 +126,21 @@
             <x:expect-not-assert label="param name declared for abstract pattern"
                 id="param-names-match"
                 location="/sch:schema/sch:pattern[@id='p7']"/>
+        </x:scenario>
+        
+        <x:scenario label="pattern param value must be present">
+            <x:expect-assert label="param value not present on concrete or abstract pattern params"
+                id="missing-param-value"
+                location="/sch:schema/sch:pattern[@id='p7']/sch:param"/>
+            <x:expect-not-assert label="param value defaults to abstract pattern param"
+                id="missing-param-value"
+                location="/sch:schema/sch:pattern[@id='p9']/sch:param"/>
+            <x:expect-not-assert label="concrete pattern param value overrides abstract pattern default param value"
+                id="missing-param-value"
+                location="/sch:schema/sch:pattern[@id='p10']/sch:param"/>
+            <x:expect-not-assert label="concrete pattern param specifies value (no abstract pattern param default)"
+                id="missing-param-value"
+                location="/sch:schema/sch:pattern[@id='p12']/sch:param"/>
         </x:scenario>
     </x:scenario>
 </x:description>
