@@ -1,5 +1,5 @@
 <!--
-Copyright © ISO/IEC 2014
+Copyright © ISO/IEC 2024
 
 The following permission notice and disclaimer shall be included in all
 copies of this XML schema ("the Schema"), and derivations of the Schema:
