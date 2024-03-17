@@ -63,7 +63,7 @@ AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD."
             <sch:assert test="every $name in current()/sch:param/@name
                 satisfies $name eq key('abstract-pattern', @is-a)/sch:param/@name" id="param-names-match"> The
                 name attribute of a pattern param element shall match 
-                the id attribute of an abstract pattern param element.
+                the name attribute of an abstract pattern param element.
             </sch:assert>
         </sch:rule>
         <sch:rule context="sch:pattern[@is-a]/sch:param">
