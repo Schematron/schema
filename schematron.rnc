@@ -124,6 +124,7 @@ pattern =
 phase =
     element phase {
         attribute id { xsd:ID },
+        attribute from { text }?,
         rich,
         (foreign & inclusion* & (p*, let*, active*))
     }
