@@ -65,6 +65,7 @@ fired-rule =
         attribute id { xsd:NCName }?,
         attribute name { text }?,
         attribute context { text },
+        attribute visit-each { text }?,
         attribute role { string }?,
         attribute flag { list{ token+ } }?,
         attribute document { xsd:anyURI }?,

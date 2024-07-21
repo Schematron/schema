@@ -124,7 +124,7 @@ pattern =
 phase =
     element phase {
         attribute id { xsd:ID },
-        attribute from { text }?,
+        attribute from { pathValue }?,
         rich,
         (foreign & inclusion* & (p*, let*, active*))
     }
@@ -156,6 +156,7 @@ rule =
         (foreign
          & inclusion*
          & ((attribute context { pathValue },
+               attribute visit-each { pathValue }?,
                attribute id { xsd:ID }?,
                attribute abstract { "false" }?,
                title?,
