@@ -91,7 +91,7 @@ library =
         rich,
         (foreign
          & (inclusion | extends)*
-         & (title?, p*, abstract-rules*, (rule-set|pattern)+, p*, diagnostics?, properties?))
+         & (title?, p*, param*, let*, abstract-rules*, (rule-set|pattern)*, p*, diagnostics?, properties?))
     }
 name =
     element name {
