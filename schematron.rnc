@@ -125,6 +125,7 @@ phase =
     element phase {
         attribute id { xsd:ID },
         attribute from { pathValue }?,
+        attribute when { pathValue }?,
         rich,
         (foreign & inclusion* & (p*, let*, active*))
     }
