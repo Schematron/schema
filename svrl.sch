@@ -54,7 +54,7 @@ AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD."
             <sch:assert test="not(../*)"> The <sch:name/> element is the root element.
             </sch:assert>
             <sch:assert
-                test="count(svrl:text) + count(svrl:ns-prefix-in-attribute-values) +count(svrl:fired-rule) + count(svrl:failed-assert) +
+                test="count(svrl:text) + count(svrl:ns-prefix-in-attribute-values) + count(svrl:active-pattern) + count(svrl:fired-rule) + count(svrl:failed-assert) +
                 count(svrl:successful-report) = count(*)">
                 <sch:name/> may only contain the following elements: text,
                 ns-prefix-in-attribute-values, active-pattern, fired-rule, failed-assert and
@@ -89,7 +89,7 @@ AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD."
             <sch:extends rule="second-level"/>
             <sch:extends rule="empty"/>
             <sch:assert
-                test="preceding-sibling::active-pattern |
+                test="preceding-sibling::svrl:active-pattern |
                 preceding-sibling::svrl:fired-rule |
                 preceding-sibling::svrl:failed-assert |
                 preceding-sibling::svrl:successful-report"
@@ -131,7 +131,7 @@ AND SHOULD NOT BE INTERPRETED AS COMPLYING WITH THAT STANDARD."
         <sch:title>Required Attributes</sch:title>
         <sch:rule context=" $context ">
             <sch:assert test="string-length( $attribute ) &gt; 0"> The <sch:name/> element
-                should have a <sch:value-of select="$attribute /name()"/> attribute.
+                should have a <sch:value-of select="name($attribute)"/> attribute.
             </sch:assert>
         </sch:rule>
     </sch:pattern>
