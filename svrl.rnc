@@ -33,16 +33,31 @@ schematron-output =
         attribute phase { xsd:NMTOKEN }?,
         attribute schemaVersion { text }?,
         attribute schematronEdition { text }?,
-        (
-            (error+, human-text*)
-            |
-            (error*,
-            human-text*,
-            ns-prefix-in-attribute-values*,
-            (active-pattern-rule-set,
-             (fired-rule, (failed-assert | successful-report)*)*)+)
-        )
+        (svrl1-model | svrl2-model)        
     }
+    
+# SVRL 2.0
+svrl2-model =
+    attribute reportLanguageVersion { "2.0" },
+    (
+        (error+, human-text*)
+        |
+        (error*,
+        human-text*,
+        ns-prefix-in-attribute-values*,
+        active-pattern-group-2.0+)
+    )
+      
+# SVRL 1.0
+svrl1-model = 
+    (error+, human-text*)
+    |
+    (error*,
+    human-text*,
+    ns-prefix-in-attribute-values*,
+    (active-pattern-group,
+     (fired-rule, (failed-assert | successful-report)*)*)+)
+
 # only namespaces from sch:ns need to be reported 
 ns-prefix-in-attribute-values =
     element ns-prefix-in-attribute-values {
@@ -55,22 +70,44 @@ active-pattern =
     element active-pattern {
         active
     }
-active-rule-set =
+active-group =
     element active-group {
         active
-    }    
-# only rules that are fired are reported, 
+    } 
+
+# SVRL 2.0 active patterns and groups
+active-pattern-2.0 =
+    element active-pattern {
+            active-2.0
+    }
+active-group-2.0 =
+    element active-group {
+        active-2.0
+    }     
+    
+# only rules that are fired are reported
 fired-rule =
     element fired-rule {
-        attribute id { xsd:NCName }?,
-        attribute name { text }?,
-        attribute context { text },
-        attribute visit-each { text }?,
-        attribute role { string }?,
-        attribute flag { list{ token+ } }?,
-        attribute document { xsd:anyURI }?,
+        fired-rule-atts,
         empty
     }
+    
+fired-rule-2.0 =
+    element fired-rule {
+        fired-rule-atts,
+        attribute count { xsd:integer }?,
+        (failed-assert|successful-report)*
+    }    
+    
+fired-rule-atts =
+    attribute id { xsd:NCName }?,
+    attribute name { text }?,
+    attribute context { text },
+    attribute visit-each { text }?,
+    attribute role { string }?,
+    attribute flag { list{ token+ } }?,
+    attribute document { xsd:anyURI }?
+
 # only references are reported, not the diagnostic 
 diagnostic-reference =
     element diagnostic-reference {
@@ -153,14 +190,21 @@ attlist.assert-and-report =
     attribute severity { string }?
 
 # active patterns and rule-sets
-active-pattern-rule-set =
-    active-pattern | active-rule-set
+active-pattern-group =
+    active-pattern | active-group
 active =
     attribute id { xsd:NCName }?,
     attribute documents { text }?,
     attribute name { text }?,
     attribute role { string }?,
     error*
+    
+# active patterns and rule-sets: SVRL 2.0
+active-pattern-group-2.0 =
+    active-pattern-2.0 | active-group-2.0
+active-2.0 =
+    active,
+    fired-rule-2.0*
     
 # assert and report message
 assertion-message = 
